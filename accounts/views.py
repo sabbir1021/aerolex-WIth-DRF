@@ -48,4 +48,26 @@ class ProfileView(APIView):
         return Response(response, status=status.HTTP_201_CREATED)
 
 
+class ChangePassword(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, format=None):
+        user = User.objects.get(id=request.user.id)
+        old_password = request.data['old_password']
+        new_password =  request.data['new_password']
+        if user.check_password(old_password):
+            user.set_password(new_password)
+            user.save()
+            response = {
+                    "success": True,
+                    "message": "your password successfuly changes"
+                }
+        else:
+            response = {
+                    "success": False,
+                    "message": "Your current password is not right."
+                }
+        return Response(response, status=status.HTTP_201_CREATED)
+
+
+
 
