@@ -17,3 +17,23 @@ class User(AbstractUser):
 #     USERNAME_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
+
+
+
+class Agent(models.Model):
+    name = models.CharField(max_length = 70)
+    phone_number = models.CharField(max_length = 20)
+    country = models.CharField(max_length = 70)
+    email = models.CharField(max_length = 70)
+    address = models.CharField(max_length = 70)
+    currency = models.CharField(max_length = 70)
+    unique_identifier = models.CharField(max_length = 70)
+    payment_policy = models.CharField(max_length = 70)
+    payment_policy = models.CharField(max_length = 70)
+
+
+    def __str__(self):
+        return self.name
+    
+    
+    
