@@ -4,12 +4,12 @@ User= get_user_model()
 from django.contrib.auth.hashers import make_password
 
 
-class ProfileSerlializer(serializers.ModelSerializer):
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id','username','email','first_name','phone_number','last_name','is_active',]
 
-class UserSerlializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id','username','email','phone_number','first_name','last_name','password', 'is_active']

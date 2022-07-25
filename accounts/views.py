@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 User= get_user_model()
 from accounts.helpers import get_tokens_for_user
-from .serializers import UserSerlializer, ProfileSerlializer
+from .serializers import UserSerializer, ProfileSerializer
 from django.http import Http404
 
 # Create your views here.
@@ -41,7 +41,7 @@ class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         user = User.objects.get(id=request.user.id)
-        serializer = ProfileSerlializer(user)
+        serializer = ProfileSerializer(user)
         response = {
                 "success": True,
                 "message": "OK",
@@ -53,7 +53,7 @@ class ProfileView(APIView):
 class ProfileUpdate(APIView):
     def patch(self, request, format=None):
         user = request.user
-        serializer = ProfileSerlializer(instance=user, data=request.data, partial=True)
+        serializer = ProfileSerializer(instance=user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -80,19 +80,16 @@ class ChangePassword(APIView):
                 }
         return Response(response, status=status.HTTP_201_CREATED)
 
-
-
-
 class UserCreate(APIView):
     def get(self, request, format=None):
         user = User.objects.all()
-        serializer = UserSerlializer(user, many=True)
+        serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
         # email = request.data['email']
         # request.data['username'] = email
-        serializer = UserSerlializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -108,12 +105,12 @@ class UserSingle(APIView):
 
     def get(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = UserSerlializer(snippet)
+        serializer = UserSerializer(snippet)
         return Response(serializer.data)
 
     def patch(self, request, pk, format=None):
         snippet = self.get_object(pk)
-        serializer = UserSerlializer(snippet, data=request.data, partial=True)
+        serializer = UserSerializer(snippet, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
