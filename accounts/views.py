@@ -6,7 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 User= get_user_model()
 from accounts.helpers import get_tokens_for_user
-from .serializers import UserSerlializer
+from .serializers import UserSerlializer, ProfileSerlializer
+from django.http import Http404
+
 # Create your views here.
 
 class LoginView(APIView):
@@ -39,20 +41,30 @@ class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         user = User.objects.get(id=request.user.id)
-        serializer = UserSerlializer(user)
+        serializer = ProfileSerlializer(user)
         response = {
                 "success": True,
-                "message": "OK permission ",
+                "message": "OK",
                 "data" : serializer.data
             }
         return Response(response, status=status.HTTP_201_CREATED)
+
+
+class ProfileUpdate(APIView):
+    def patch(self, request, format=None):
+        user = request.user
+        serializer = ProfileSerlializer(instance=user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ChangePassword(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         user = User.objects.get(id=request.user.id)
-        old_password = request.data['old_password']
+        old_password = request.data['current_password']
         new_password =  request.data['new_password']
         if user.check_password(old_password):
             user.set_password(new_password)
@@ -71,3 +83,38 @@ class ChangePassword(APIView):
 
 
 
+class UserCreate(APIView):
+    def get(self, request, format=None):
+        user = User.objects.all()
+        serializer = UserSerlializer(user, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        # email = request.data['email']
+        # request.data['username'] = email
+        serializer = UserSerlializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserSingle(APIView):   
+    def get_object(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = UserSerlializer(snippet)
+        return Response(serializer.data)
+
+    def patch(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = UserSerlializer(snippet, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
