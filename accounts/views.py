@@ -87,8 +87,9 @@ class UserCreate(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        # email = request.data['email']
-        # request.data['username'] = email
+        agent = request.user.agent
+        request.data['agent'] = agent
+        print(request.data)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
