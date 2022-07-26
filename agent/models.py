@@ -14,6 +14,8 @@ class Agent(models.Model):
     unique_identifier = models.CharField(max_length = 70)
     payment_policy =  models.CharField(max_length=20,choices=PAYMENT_POLICY_CHOICES)
     agent_type = models.CharField(max_length=20,choices=AGENT_TYPE_CHOICES)
+    balance = models.IntegerField(blank=True, null=True)
+    signup_confirmation = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
