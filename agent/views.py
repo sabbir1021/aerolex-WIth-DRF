@@ -8,7 +8,6 @@ User= get_user_model()
 from .serializers import AgentSerializer
 from django.http import Http404
 from .models import Agent
-
 # Create your views here.
 
 class CountryAgent(APIView):
@@ -36,7 +35,12 @@ class LocalAgent(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        country = request.data['country']
+        country = request.user.agent.country
+        currency = request.user.agent.currency
+        payment_policy = request.user.agent.payment_policy
+        request.data["country"] = country
+        request.data["currency"] = currency
+        request.data["payment_policy"] = payment_policy
         request.data["agent_type"] = "local_agent"
         serializer = AgentSerializer(data=request.data)
         if serializer.is_valid():
