@@ -6,6 +6,8 @@ app_name = "agent"
 urlpatterns = [
     path('country-agents/', views.CountryAgent.as_view(), name="country_agent"),
     path('local-agents/', views.LocalAgent.as_view(), name="local_agent"),
+    path('agent/', views.AgentSingle.as_view(), name="agent"),
+
 
    
 ]

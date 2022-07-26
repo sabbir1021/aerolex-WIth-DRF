@@ -51,6 +51,7 @@ class ProfileView(APIView):
 
 
 class ProfileUpdate(APIView):
+    permission_classes = [IsAuthenticated]
     def patch(self, request, format=None):
         user = request.user
         serializer = ProfileSerializer(instance=user, data=request.data, partial=True)
@@ -61,6 +62,7 @@ class ProfileUpdate(APIView):
 
 
 class ChangePassword(APIView):
+    permission_classes = [IsAuthenticated]
     permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         user = User.objects.get(id=request.user.id)
@@ -81,6 +83,7 @@ class ChangePassword(APIView):
         return Response(response, status=status.HTTP_201_CREATED)
 
 class UserCreate(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         user = User.objects.all()
         serializer = UserSerializer(user, many=True)
@@ -97,7 +100,8 @@ class UserCreate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class UserSingle(APIView):   
+class UserSingle(APIView):
+    permission_classes = [IsAuthenticated] 
     def get_object(self, pk):
         try:
             return User.objects.get(pk=pk)

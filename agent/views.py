@@ -11,6 +11,7 @@ from .models import Agent
 # Create your views here.
 
 class CountryAgent(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         agents = Agent.objects.filter(agent_type="country_agent")
         serializer = AgentSerializer(agents, many=True)
@@ -29,6 +30,7 @@ class CountryAgent(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LocalAgent(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
         agents = Agent.objects.filter(agent_type="local_agent")
         serializer = AgentSerializer(agents, many=True)
@@ -46,4 +48,26 @@ class LocalAgent(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AgentSingle(APIView):
+    permission_classes = [IsAuthenticated]
+    def get_object(self, pk):
+        try:
+            return Agent.objects.get(pk=pk)
+        except Agent.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = AgentSerializer(snippet)
+        return Response(serializer.data)
+
+    def patch(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = AgentSerializer(snippet, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

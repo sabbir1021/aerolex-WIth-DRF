@@ -4,7 +4,6 @@ User= get_user_model
 from base.models import COUNTRY_CHOICES, PAYMENT_POLICY_CHOICES, AGENT_TYPE_CHOICES
 # Create your models here.
 
-
 class Agent(models.Model):
     name = models.CharField(max_length = 70)
     phone_number = models.CharField(max_length = 20)
