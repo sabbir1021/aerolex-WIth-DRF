@@ -13,13 +13,15 @@ class AgentLiteSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    agent = AgentLiteSerializer(read_only = True, many=True)
+    agent = AgentLiteSerializer(read_only = True)
     class Meta:
         model = User
         fields = ['id','agent','username','email','first_name','phone_number','last_name','is_active',]
 
 class UserSerializer(serializers.ModelSerializer):
     agent = ReadWriteSerializerMethodField()
+    def get_agent(self, obj):
+        return ProfileSerializer(obj.agent, many=False).data
     class Meta:
         model = User
         fields = ['id','agent','username','email','phone_number','first_name','last_name','password', 'is_active']

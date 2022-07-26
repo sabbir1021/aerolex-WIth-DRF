@@ -9,8 +9,8 @@ from accounts.helpers import get_tokens_for_user
 from .serializers import UserSerializer, ProfileSerializer
 from django.http import Http404
 
-# Create your views here.
 
+# Create your views here.
 class LoginView(APIView):
     def post(self, request, format=None):
         email = request.data.get('email')
@@ -87,7 +87,7 @@ class UserCreate(APIView):
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        agent = request.user.agent
+        agent = request.user.agent.id
         request.data['agent'] = agent
         print(request.data)
         serializer = UserSerializer(data=request.data)

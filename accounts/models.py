@@ -20,6 +20,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password=password, **extra_fields)
         user.is_superuser = True
         user.is_staff = True
+        user.status = 'active'
         user.save(using=self._db)
         return user
 
@@ -31,7 +32,7 @@ class User(AbstractUser):
     user_role = models.CharField(max_length=20,choices=USER_ROLE_CHOICES)
     user_type = models.CharField(max_length=20,choices=USER_TYPE_CHOICES)
     status = models.CharField(max_length=20,choices=USER_STATUS_CHOICES)
-    agent = models.OneToOneField(Agent, on_delete=models.CASCADE)
+    agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
     # REQUIRED_FIELDS = ['username','phone_number', 'user_role', 'user_type', 'status']
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
