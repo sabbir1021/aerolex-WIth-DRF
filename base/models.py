@@ -35,6 +35,15 @@ PAYMENT_POLICY_CHOICES = (
         )
 
 AGENT_TYPE_CHOICES = (
-         ('country_agent', 'Country Agent'),
+        ('country_agent', 'Country Agent'),
         ('local_agent', 'Local Agent')
+        )
+
+# Payment
+
+PAYMENT_TYPE_CHOICES = (
+        ('bkash', 'Bkash'),
+        ('bank', 'Bank'),
+        ('nagad', 'Nagad'),
+
         )
