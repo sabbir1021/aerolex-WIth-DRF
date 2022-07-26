@@ -33,7 +33,6 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=20,choices=USER_TYPE_CHOICES)
     status = models.CharField(max_length=20,choices=USER_STATUS_CHOICES)
     agent = models.ForeignKey(Agent, on_delete=models.CASCADE)
-    # REQUIRED_FIELDS = ['username','phone_number', 'user_role', 'user_type', 'status']
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()

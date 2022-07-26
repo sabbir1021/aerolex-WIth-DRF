@@ -8,7 +8,7 @@ User= get_user_model()
 from accounts.helpers import get_tokens_for_user
 from .serializers import UserSerializer, ProfileSerializer
 from django.http import Http404
-
+from base.decorator import userGuard
 
 # Create your views here.
 class LoginView(APIView):
@@ -63,7 +63,6 @@ class ProfileUpdate(APIView):
 
 class ChangePassword(APIView):
     permission_classes = [IsAuthenticated]
-    permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
         user = User.objects.get(id=request.user.id)
         old_password = request.data['current_password']
@@ -85,14 +84,14 @@ class ChangePassword(APIView):
 class UserCreate(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request, format=None):
-        user = User.objects.all()
+        user = User.objects.filter(agent__country = request.user.agent.country, user_type = request.user.user_type)
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        agent = request.user.agent.id
-        request.data['agent'] = agent
-        print(request.data)
+        request.data['agent'] = request.user.agent.id
+        request.data['user_type'] = request.user.user_type
+        request.data['status'] = "active"
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -102,17 +101,13 @@ class UserCreate(APIView):
 
 class UserSingle(APIView):
     permission_classes = [IsAuthenticated] 
-    def get_object(self, pk):
-        try:
-            return User.objects.get(pk=pk)
-        except User.DoesNotExist:
-            raise Http404
-
+    @userGuard
     def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
+        snippet = User.objects.get(pk=pk)
         serializer = UserSerializer(snippet)
         return Response(serializer.data)
 
+    @userGuard
     def patch(self, request, pk, format=None):
         snippet = self.get_object(pk)
         serializer = UserSerializer(snippet, data=request.data, partial=True)
