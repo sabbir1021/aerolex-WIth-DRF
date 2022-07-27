@@ -45,5 +45,10 @@ PAYMENT_TYPE_CHOICES = (
         ('bkash', 'Bkash'),
         ('bank', 'Bank'),
         ('nagad', 'Nagad'),
+        )
 
+DEPOSIT_STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
         )

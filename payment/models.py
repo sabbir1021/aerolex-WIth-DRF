@@ -1,7 +1,8 @@
 from django.db import models
 from django.forms import URLField
 from agent.models import Agent
-from base.models import PAYMENT_TYPE_CHOICES
+from base.models import PAYMENT_TYPE_CHOICES, DEPOSIT_STATUS_CHOICES
+
 # Create your models here.
 
 class PaymentMethod(models.Model):
@@ -20,10 +21,18 @@ class Deposit(models.Model):
     attachment_url = models.URLField(max_length=200,blank=True, null=True)
     amount = models.IntegerField()
     agent = models.ForeignKey(Agent,  on_delete=models.CASCADE)
-    status = models.BooleanField()
+    status = models.CharField(max_length=20,choices=DEPOSIT_STATUS_CHOICES)
 
     def __str__(self):
-        return self.agent
+        return self.agent.name
 
     
+class DepositHistory(models.Model):
+    deposit = models.ForeignKey(Deposit,  on_delete=models.CASCADE, related_name='deposit_history')
+    status_name = models.CharField(max_length=20,choices=DEPOSIT_STATUS_CHOICES)
+    date_time = models.DateTimeField()
+
+    def __str__(self):
+        return str(self.deposit.amount)
+
     
