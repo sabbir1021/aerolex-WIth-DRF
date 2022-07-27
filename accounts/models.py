@@ -28,7 +28,7 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length = 10)
+    phone_number = models.CharField(max_length = 20, unique=True)
     user_role = models.CharField(max_length=20,choices=USER_ROLE_CHOICES)
     user_type = models.CharField(max_length=20,choices=USER_TYPE_CHOICES)
     status = models.CharField(max_length=20,choices=USER_STATUS_CHOICES)
