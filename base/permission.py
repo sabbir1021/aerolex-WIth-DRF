@@ -91,16 +91,22 @@ class DepositPermission(BasePermission):
 class DepositUpdatePermission(BasePermission):
     def has_permission(self, request, view):
         if request.method =='GET':
-            deposit = Deposit.objects.get(id=view.kwargs.get('pk'))
-            if deposit.agent.country == request.user.agent.country and request.user.user_type == "country_user":
-                return True
-            if deposit.agent == request.user.agent:
-                return True
-            return False
-        if request.method =='PATCH':
-            user = request.user
-            deposit = Deposit.objects.get(id=view.kwargs.get('pk'))
-            if user.user_type == "country_user" and deposit.agent.country == request.user.agent.country:
-                return True
-            else:
+            try:
+                deposit = Deposit.objects.get(id=view.kwargs.get('pk'))
+                if deposit.agent.country == request.user.agent.country and request.user.user_type == "country_user":
+                    return True
+                if deposit.agent == request.user.agent:
+                    return True
                 return False
+            except Deposit.DoesNotExist:
+                raise Http404
+        if request.method =='PATCH':
+            try:
+                user = request.user
+                deposit = Deposit.objects.get(id=view.kwargs.get('pk'))
+                if user.user_type == "country_user" and deposit.agent.country == request.user.agent.country:
+                    return True
+                else:
+                    return False
+            except Deposit.DoesNotExist:
+                raise Http404

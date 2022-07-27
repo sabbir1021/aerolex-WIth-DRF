@@ -71,18 +71,12 @@ class DepositListCreate(APIView):
 class DepositViewUpdate(APIView):
     permission_classes = [IsAuthenticated, DepositUpdatePermission]
     def get(self, request, pk):
-        try:
-            snippet = Deposit.objects.get(pk=pk)
-        except:
-            raise Http404
+        snippet = Deposit.objects.get(pk=pk)
         serializer = DepositSerializer(snippet)
         return Response(serializer.data)
 
     def patch(self, request, pk, format=None):
-        try:
-            snippet = Deposit.objects.get(pk=pk)
-        except:
-            raise Http404
+        snippet = Deposit.objects.get(pk=pk)
         status = request.data['status']
         previous_status = snippet.status
         serializer = DepositSerializer(snippet, data=request.data, partial=True)
