@@ -52,3 +52,13 @@ DEPOSIT_STATUS_CHOICES = (
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
         )
+
+MARKUP_TYPE_CHOICES = (
+        ('flat', 'Flat'),
+        ('percentage', 'Percentage')
+        )
+
+PLATFORM_CHOICES = (
+        ('hotel', 'Hotel'),
+        ('air', 'Air')
+        )

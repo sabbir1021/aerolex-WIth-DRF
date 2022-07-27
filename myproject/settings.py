@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'accounts',
     'agent',
     'payment',
+    'settings',
 
     'rest_framework',
     'rest_framework_simplejwt',
