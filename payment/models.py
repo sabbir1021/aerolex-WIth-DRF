@@ -6,7 +6,7 @@ from base.models import PAYMENT_TYPE_CHOICES
 
 class PaymentMethod(models.Model):
     account_name = models.CharField(max_length = 150)
-    account_number = models.CharField(max_length = 150)
+    account_number = models.CharField(max_length = 150, unique=True)
     payment_type = models.CharField(max_length=20,choices=PAYMENT_TYPE_CHOICES)
     agent = models.ForeignKey(Agent,  on_delete=models.CASCADE)
     is_active = models.BooleanField()
