@@ -3,6 +3,8 @@ from agent.models import Agent
 from django.http import Http404
 from django.contrib.auth import get_user_model
 User= get_user_model()
+from payment.models import PaymentMethod
+
 
 
 class CountryAgentPermission(BasePermission):
@@ -43,4 +45,17 @@ class UserPermission(BasePermission):
             else:
                 return False
         except User.DoesNotExist:
+            raise Http404
+
+
+class PaymentMethodPermission(BasePermission):
+    def has_permission(self, request, view):
+        r_user = request.user
+        try:
+            user = PaymentMethod.objects.get(pk=view.kwargs.get('pk'))
+            if r_user.user_type == "country_user":
+                return True
+            else:
+                return False
+        except PaymentMethod.DoesNotExist:
             raise Http404

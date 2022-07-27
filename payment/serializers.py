@@ -1,9 +1,14 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 User= get_user_model()
-from .models import PaymentMethod
+from .models import PaymentMethod, Deposit
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
         fields = ['id','account_name','account_number','agent','is_active']
+
+class PaymentMethodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Deposit
+        fields = ['id','payment_method','issue_date','attachment_url','amount','agent','status']
