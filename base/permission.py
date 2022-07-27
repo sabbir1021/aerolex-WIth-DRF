@@ -59,3 +59,36 @@ class PaymentMethodPermission(BasePermission):
                 return False
         except PaymentMethod.DoesNotExist:
             raise Http404
+
+
+class DepositPermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.method =='GET':
+            return True
+        if request.method =='POST':
+            user = request.user
+            if request.data.get('agent'):
+                try:
+                    agent = Agent.objects.get(id=request.data['agent'])
+                    if agent.country == request.user.agent.country:
+                        return False
+                except:
+                    pass
+            else:
+                return False
+
+            # try:
+            #     agent = Agent.objects.get(id=request.data['agent'])
+            #     if agent.country == request.user.agent.country:
+            #         if user.user_type == "country_user":
+            #             request.data['status'] = "approved"
+            #             return True
+            #         if agent == user.agent:
+            #             request.data['agent'] = 
+            #             request.data['status'] = "pending"
+            #             return True
+            #         return False
+            #     else:
+            #         return False
+            # except PaymentMethod.DoesNotExist:
+            #     raise Http404

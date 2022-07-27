@@ -9,8 +9,9 @@ User= get_user_model()
 from .serializers import PaymentMethodSerializer, DepositSerializer
 from django.http import Http404
 from payment.models import PaymentMethod, Deposit, DepositHistory
-from base.permission import PaymentMethodPermission
+from base.permission import PaymentMethodPermission,DepositPermission
 from datetime import datetime
+from agent.models import Agent
 # Create your views here.
 
 class PaymentMethodListCreate(APIView):
@@ -48,18 +49,18 @@ class PaymentMethodViewUpdate(APIView):
 
 class DepositListCreate(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         deposits = Deposit.objects.all()
         serializer = DepositSerializer(deposits, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        request.data['status'] = "pending"
+        print(request.data)
         serializer = DepositSerializer(data=request.data)
         if serializer.is_valid():
             obj = serializer.save()
-            DepositHistory.objects.create(deposit=obj,status_name="pending",date_time=datetime.now())
-
+            DepositHistory.objects.create(deposit=obj,status_name=request.data['status'],date_time=datetime.now())
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
