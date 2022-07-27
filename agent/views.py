@@ -9,18 +9,16 @@ from .serializers import AgentSerializer
 from accounts.serializers import UserSerializer
 from django.http import Http404
 from .models import Agent
-from base.decorator import countryAgentGuard, localAgentGuard, agentGuard
+from base.permission import CountryAgentPermission, LocalAgentPermission, AgentPermission
 # Create your views here.
 
 class CountryAgent(APIView):
-    permission_classes = [IsAuthenticated]
-    @countryAgentGuard
+    permission_classes = [IsAuthenticated, CountryAgentPermission]
     def get(self, request, format=None):
         agents = Agent.objects.filter(agent_type="country_agent")
         serializer = AgentSerializer(agents, many=True)
         return Response(serializer.data)
 
-    @countryAgentGuard
     def post(self, request, format=None):
         country = request.data['country']
         agent_check = Agent.objects.filter(country=country)
@@ -34,14 +32,12 @@ class CountryAgent(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class LocalAgent(APIView):
-    permission_classes = [IsAuthenticated]
-    @localAgentGuard
+    permission_classes = [IsAuthenticated, LocalAgentPermission]
     def get(self, request, format=None):
         agents = Agent.objects.filter(agent_type="local_agent", country=request.user.agent.country)
         serializer = AgentSerializer(agents, many=True)
         return Response(serializer.data)
 
-    @localAgentGuard
     def post(self, request, format=None):
         request.data["country"] = request.user.agent.country
         request.data["currency"] = request.user.agent.currency
@@ -55,14 +51,12 @@ class LocalAgent(APIView):
 
 
 class AgentSingle(APIView):
-    permission_classes = [IsAuthenticated]
-    @agentGuard
+    permission_classes = [IsAuthenticated, AgentPermission]
     def get(self, request, pk):
         snippet = Agent.objects.get(pk=pk)
         serializer = AgentSerializer(snippet)
         return Response(serializer.data)
 
-    @agentGuard
     def patch(self, request, pk, format=None):
         snippet = Agent.objects.get(pk=pk)
         serializer = AgentSerializer(snippet, data=request.data, partial=True)

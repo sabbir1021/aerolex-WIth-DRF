@@ -8,8 +8,7 @@ User= get_user_model()
 from accounts.helpers import get_tokens_for_user
 from .serializers import UserSerializer, ProfileSerializer
 from django.http import Http404
-from base.decorator import userGuard
-
+from base.permission import UserPermission
 # Create your views here.
 class LoginView(APIView):
     def post(self, request, format=None):
@@ -100,14 +99,12 @@ class UserCreate(APIView):
 
 
 class UserSingle(APIView):
-    permission_classes = [IsAuthenticated] 
-    @userGuard
+    permission_classes = [IsAuthenticated, UserPermission] 
     def get(self, request, pk, format=None):
         snippet = User.objects.get(pk=pk)
         serializer = UserSerializer(snippet)
         return Response(serializer.data)
 
-    @userGuard
     def patch(self, request, pk, format=None):
         snippet = self.get_object(pk)
         serializer = UserSerializer(snippet, data=request.data, partial=True)
