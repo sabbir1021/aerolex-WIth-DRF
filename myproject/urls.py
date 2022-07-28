@@ -1,3 +1,5 @@
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path , include
 from drf_yasg.views import get_schema_view
@@ -23,9 +25,11 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace="accounts")),
     path('agent/', include('agent.urls', namespace="agent")),
     path('payment/', include('payment.urls', namespace="payment")),
+    path('settings/', include('settings.urls', namespace="settings")),
 
 ]
 
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [path('api-auth/', include('rest_framework.urls')),]
 if DEBUG:
     urlpatterns += [
@@ -33,3 +37,5 @@ if DEBUG:
         re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
         re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     ]
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

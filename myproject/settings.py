@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -128,10 +129,22 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATIC_URL = '/static/'
 
-STATIC_URL = 'static/'
+# Media settings
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+
+# AWS3
+AWS_ACCESS_KEY_ID = "AKIARP6WZUSW2JTBO4FF" 
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_STORAGE_BUCKET_NAME = "marcelinoa"
+
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
