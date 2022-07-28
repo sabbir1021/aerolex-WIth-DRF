@@ -32,7 +32,7 @@ class PaymentMethodListCreate(APIView):
 
 
 class PaymentMethodViewUpdate(APIView):
-    permission_classes = [IsAuthenticated,PaymentMethodPermission]
+    permission_classes = [IsAuthenticated, PaymentMethodPermission]
     def get(self, request, pk):
         snippet = PaymentMethod.objects.get(pk=pk)
         serializer = PaymentMethodSerializer(snippet)

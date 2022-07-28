@@ -15,7 +15,7 @@ class DepositHistorySerializer(serializers.ModelSerializer):
         fields = ['id','status_name','date_time']
 
 class DepositSerializer(serializers.ModelSerializer):
-    histroy = DepositHistorySerializer(source='deposit_history',many=True,read_only=True)
+    history = DepositHistorySerializer(source='deposit_history',many=True,read_only=True)
     class Meta:
         model = Deposit
-        fields = ['id','payment_method','issue_date','attachment_url','amount','agent','status','histroy']
+        fields = ['id','payment_method','issue_date','attachment_url','amount','agent','status','history']

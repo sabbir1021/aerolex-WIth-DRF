@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -7,7 +8,6 @@ from django.contrib.auth import get_user_model
 User= get_user_model()
 from .serializers import AgentSerializer
 from accounts.serializers import UserSerializer
-from django.http import Http404
 from .models import Agent
 from base.permission import CountryAgentPermission, LocalAgentPermission, AgentPermission
 # Create your views here.
@@ -68,11 +68,8 @@ class AgentSingle(APIView):
 
 class AccountSetup(APIView):
     def get_object(self, pk):
-        try:
-            return Agent.objects.get(pk=pk)
-        except Agent.DoesNotExist:
-            raise Http404
-
+        return get_object_or_404(Agent, pk=pk)
+        
     def post(self, request, pk, format=None):
         snippet = self.get_object(pk)
         if snippet.signup_confirmation:

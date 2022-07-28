@@ -53,6 +53,8 @@ DEPOSIT_STATUS_CHOICES = (
         ('rejected', 'Rejected'),
         )
 
+# Settings
+
 MARKUP_TYPE_CHOICES = (
         ('flat', 'Flat'),
         ('percentage', 'Percentage')
