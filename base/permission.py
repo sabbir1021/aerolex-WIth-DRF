@@ -97,3 +97,12 @@ class DepositUpdatePermission(BasePermission):
             else:
                 return False
             
+
+# Settings
+
+class MarkupSettingUpdatePermission(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.agent.agent_type == "local_agent":
+            return False
+        else:
+            return True
