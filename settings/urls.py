@@ -7,5 +7,7 @@ urlpatterns = [
     path('file-upload/', views.FileUploadCreate.as_view(), name="file_upload"),
     path('markup-setting/', views.MarkupSettingCreateList.as_view(), name="markup_setting"),
     path('markup-setting/<int:pk>', views.MarkupSettingUpdate.as_view(), name="markup_setting_update"),
+    path('currency-setting', views.CurrencySettingCreateList.as_view(), name="currency_setting"),
+    
     path('file-upload/', views.FileUploadCreate.as_view(), name="file_upload"),
 ]
