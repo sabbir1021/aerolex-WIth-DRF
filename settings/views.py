@@ -40,6 +40,7 @@ class MarkupSettingUpdate(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 class FileUploadCreate(APIView):
     def post(self, request, format=None):
         serializer = FileUploadSerializer(data=request.data)
