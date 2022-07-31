@@ -7,6 +7,8 @@ from drf_yasg import openapi
 from myproject.settings import DEBUG
 from django.urls.conf import re_path
 from rest_framework import permissions
+from myproject.views import health_check
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -26,6 +28,7 @@ urlpatterns = [
     path('agent/', include('agent.urls', namespace="agent")),
     path('payment/', include('payment.urls', namespace="payment")),
     path('settings/', include('settings.urls', namespace="settings")),
+    path('', health_check),
 
 ]
 
